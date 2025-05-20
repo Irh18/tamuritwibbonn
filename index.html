@@ -1,200 +1,145 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counter Friendly</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #a8e6cf, #56c596);
-            color: #333;
-        }
-
-        .counter-container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .counter {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .counter button {
-            background: #56c596;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .counter button:hover {
-            background: #3ba882;
-        }
-
-        .counter span {
-            font-size: 36px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .counter-title {
-            font-size: 28px;
-            margin-bottom: 15px;
-            color: #56c596;
-        }
-
-        .number-buttons {
-            margin-top: 10px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .number-buttons button {
-            background: #56c596;
-            color: #fff;
-            border: none;
-            padding: 10px 0;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .number-buttons button:hover {
-            background: #3ba882;
-        }
-
-        .control-buttons {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .control-buttons button {
-            background: #56c596;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .control-buttons button:hover {
-            background: #3ba882;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tracker Latihan Harian</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 20px;
+      background: #f8f9fa;
+    }
+    h2 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.2);
+    }
+    .catatan {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .reset-btn {
+      margin-top: 20px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div class="counter-container">
-        <div class="counter-title">Counter Friendly</div>
-        <div class="counter">
-            <button onclick="decrement()">-</button>
-            <span id="counter-value">0</span>
-            <button onclick="increment()">+</button>
-        </div>
-        <div class="number-buttons">
-            <button onclick="incrementBy(1)">1</button>
-            <button onclick="incrementBy(2)">2</button>
-            <button onclick="incrementBy(3)">3</button>
-            <button onclick="incrementBy(4)">4</button>
-            <button onclick="incrementBy(5)">5</button>
-            <button onclick="incrementBy(6)">6</button>
-            <button onclick="incrementBy(7)">7</button>
-            <button onclick="incrementBy(8)">8</button>
-            <button onclick="incrementBy(9)">9</button>
-            <button onclick="incrementBy(10)">10</button>
-            <button onclick="incrementBy(11)">11</button>
-            <button onclick="incrementBy(12)">12</button>
-        </div>
-        <div class="control-buttons">
-            <button onclick="resetCounter()">Reset</button>
-            <button onclick="undo()">Undo</button>
-            <button onclick="redo()">Redo</button>
-        </div>
-    </div>
 
-    <script>
-        let counterValue = 0;
-        const counterDisplay = document.getElementById('counter-value');
-        let history = [];
-        let redoStack = [];
+  <h2>📋 Tracker Latihan Harian</h2>
+  <p style="text-align:center">Target: Latihan ringan setiap 2 jam</p>
 
-        function updateDisplay() {
-            counterDisplay.textContent = counterValue;
-        }
+  <table id="trackerTable">
+    <thead>
+      <tr>
+        <th>Waktu</th>
+        <th>Push-up</th>
+        <th>Grip</th>
+        <th>Lunges</th>
+        <th>Squat</th>
+        <th>Perut</th>
+        <th>Catatan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Baris Waktu -->
+    </tbody>
+  </table>
 
-        function increment() {
-            saveState();
-            counterValue++;
-            updateDisplay();
-        }
+  <button class="reset-btn" onclick="resetTracker()">🔄 Reset Semua</button>
 
-        function decrement() {
-            if (counterValue > 0) {
-                saveState();
-                counterValue--;
-                updateDisplay();
-            }
-        }
+  <script>
+    const waktu = [
+      "06.00 - 08.00", "08.00 - 10.00", "10.00 - 12.00", "12.00 - 14.00",
+      "14.00 - 16.00", "16.00 - 18.00", "18.00 - 20.00", "20.00 - 22.00"
+    ];
 
-        function incrementBy(value) {
-            saveState();
-            counterValue += value;
-            updateDisplay();
-        }
+    const tbody = document.querySelector('#trackerTable tbody');
 
-        function resetCounter() {
-            saveState();
-            counterValue = 0;
-            updateDisplay();
-        }
+    waktu.forEach((w, i) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${w}</td>
+        ${["push", "grip", "lunges", "squat", "perut"].map(ex => `
+          <td><input type="checkbox" id="${ex}${i}"></td>
+        `).join('')}
+        <td><input class="catatan" id="catatan${i}" placeholder="..." /></td>
+      `;
+      tbody.appendChild(row);
+    });
 
-        function saveState() {
-            history.push(counterValue);
-            redoStack = []; // Clear redo stack on new action
-        }
+    function saveState() {
+      waktu.forEach((_, i) => {
+        ["push", "grip", "lunges", "squat", "perut"].forEach(ex => {
+          const checkbox = document.getElementById(`${ex}${i}`);
+          localStorage.setItem(`${ex}${i}`, checkbox.checked);
+        });
+        const note = document.getElementById(`catatan${i}`);
+        localStorage.setItem(`catatan${i}`, note.value);
+      });
+    }
 
-        function undo() {
-            if (history.length > 0) {
-                redoStack.push(counterValue);
-                counterValue = history.pop();
-                updateDisplay();
-            }
-        }
+    function loadState() {
+      waktu.forEach((_, i) => {
+        ["push", "grip", "lunges", "squat", "perut"].forEach(ex => {
+          const checkbox = document.getElementById(`${ex}${i}`);
+          checkbox.checked = localStorage.getItem(`${ex}${i}`) === "true";
+        });
+        const note = document.getElementById(`catatan${i}`);
+        note.value = localStorage.getItem(`catatan${i}`) || "";
+      });
+    }
 
-        function redo() {
-            if (redoStack.length > 0) {
-                history.push(counterValue);
-                counterValue = redoStack.pop();
-                updateDisplay();
-            }
-        }
-    </script>
+    function resetTracker() {
+      if (confirm("Yakin ingin mereset semua data latihan hari ini?")) {
+        waktu.forEach((_, i) => {
+          ["push", "grip", "lunges", "squat", "perut"].forEach(ex => {
+            const checkbox = document.getElementById(`${ex}${i}`);
+            checkbox.checked = false;
+            localStorage.removeItem(`${ex}${i}`);
+          });
+          const note = document.getElementById(`catatan${i}`);
+          note.value = "";
+          localStorage.removeItem(`catatan${i}`);
+        });
+      }
+    }
+
+    // Simpan otomatis saat ada perubahan
+    document.addEventListener('input', saveState);
+
+    // Load data saat halaman dibuka
+    window.onload = loadState;
+  </script>
+
 </body>
 </html>
