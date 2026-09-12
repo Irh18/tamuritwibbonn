@@ -1,459 +1,1007 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kamera Twibbon Tamuri</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#052c1d">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+<title>Twibbon Kamera Tamuri</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    background:#061b14;
+    font-family:Arial,Helvetica,sans-serif;
+    color:white;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+}
+
+.app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at top,#0b5c3b 0,#06271b 38%,#041611 100%);
+    position:relative;
+    overflow:hidden;
+    padding-bottom:30px;
+}
+
+
+/* HEADER */
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 18px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.brand-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:rgba(255,255,255,.12);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    backdrop-filter:blur(12px);
+}
+
+.brand-text strong{
+    display:block;
+    font-size:15px;
+}
+
+.brand-text span{
+    font-size:11px;
+    opacity:.65;
+}
+
+.camera-switch{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.14);
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+}
+
+
+/* CAMERA */
+
+.camera-wrapper{
+    position:relative;
+    margin:0 14px;
+    aspect-ratio:9/16;
+    overflow:hidden;
+    border-radius:26px;
+    background:#000;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.4),
+        inset 0 0 0 1px rgba(255,255,255,.12);
+}
+
+video{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    left:0;
+    top:0;
+
+    /* TIDAK MIRROR */
+    transform:none;
+}
+
+.twibbon{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:fill;
+    left:0;
+    top:0;
+    pointer-events:none;
+    z-index:3;
+}
+
+
+/* COUNTDOWN */
+
+.countdown{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+    background:rgba(0,0,0,.15);
+    backdrop-filter:blur(2px);
+}
+
+.countdown span{
+    font-size:110px;
+    font-weight:800;
+    text-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+
+
+/* CAMERA STATUS */
+
+.status{
+    position:absolute;
+    top:14px;
+    left:14px;
+    z-index:5;
+    padding:7px 11px;
+    border-radius:20px;
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(10px);
+    font-size:11px;
+}
+
+.status-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#39e58c;
+    margin-right:6px;
+}
+
+
+/* CONTROLS */
+
+.controls{
+    padding:20px 22px 10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:28px;
+}
+
+.small-control{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.12);
+    color:white;
+    font-size:20px;
+    backdrop-filter:blur(10px);
+    cursor:pointer;
+}
+
+.shutter{
+    width:78px;
+    height:78px;
+    border-radius:50%;
+    border:5px solid rgba(255,255,255,.92);
+    background:transparent;
+    padding:6px;
+    cursor:pointer;
+}
+
+.shutter-inner{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:white;
+    transition:.15s;
+}
+
+.shutter:active .shutter-inner{
+    transform:scale(.86);
+}
+
+.hint{
+    text-align:center;
+    font-size:12px;
+    opacity:.55;
+    margin-top:2px;
+}
+
+
+/* RESULT */
+
+.result-page{
+    position:fixed;
+    inset:0;
+    background:#04150f;
+    z-index:50;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    overflow:auto;
+}
+
+.result-header{
+    width:100%;
+    max-width:480px;
+    padding:18px 20px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.result-image-wrap{
+    width:calc(100% - 28px);
+    max-width:450px;
+    border-radius:24px;
+    overflow:hidden;
+    background:#000;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+#result{
+    width:100%;
+    display:block;
+}
+
+.action-panel{
+    width:100%;
+    max-width:480px;
+    padding:22px 18px 30px;
+}
+
+.main-share{
+    width:100%;
+    border:none;
+    padding:16px 20px;
+    border-radius:16px;
+    background:white;
+    color:#07301f;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+    margin-bottom:12px;
+}
+
+.secondary-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.secondary-actions button,
+.secondary-actions a{
+    border:none;
+    padding:14px;
+    border-radius:14px;
+    background:rgba(255,255,255,.10);
+    color:white;
+    text-decoration:none;
+    text-align:center;
+    font-size:14px;
+    cursor:pointer;
+}
+
+
+/* LOADING */
+
+.loading{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(8px);
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.spinner{
+    width:45px;
+    height:45px;
+    border:4px solid rgba(255,255,255,.2);
+    border-top-color:white;
+    border-radius:50%;
+    margin:auto;
+    animation:spin .8s linear infinite;
+}
+
+.loader-box p{
+    margin-top:15px;
+    font-size:13px;
+    opacity:.8;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
     }
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+canvas{
+    display:none;
+}
 
-    .app {
-      width: 100%;
-      max-width: 430px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-
-    .camera-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      background: #222;
-      overflow: hidden;
-      border-radius: 18px;
-    }
-
-    video {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      left: 0;
-      top: 0;
-
-      /* selfie terasa seperti kaca */
-      transform: scaleX(-1);
-    }
-
-    .twibbon {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-      left: 0;
-      top: 0;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .controls {
-      margin-top: 18px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    button,
-    a.download {
-      border: none;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    #captureBtn {
-      background: #ffffff;
-      color: #111;
-    }
-
-    #switchBtn {
-      background: #333;
-      color: white;
-    }
-
-    .download {
-      display: none;
-      text-decoration: none;
-      background: #1d9b5c;
-      color: white;
-    }
-
-    #result {
-      width: 100%;
-      margin-top: 20px;
-      border-radius: 18px;
-      display: none;
-    }
-
-    canvas {
-      display: none;
-    }
-
-    .info {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 12px;
-      line-height: 1.5;
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-  <h1>Kamera Twibbon Tamuri</h1>
+    <div class="header">
 
-  <div class="camera-container">
+        <div class="brand">
 
-    <video id="video" autoplay playsinline></video>
+            <div class="brand-icon">
+                📸
+            </div>
 
-    <img
-      src="tamuri.png"
-      class="twibbon"
-      id="twibbon"
-      alt="Twibbon Tamuri"
-    />
+            <div class="brand-text">
+                <strong>Tamuri Photo Booth</strong>
+                <span>Abadikan momen terbaikmu</span>
+            </div>
 
-  </div>
+        </div>
 
-  <div class="controls">
+        <button class="camera-switch" id="switchBtn">
+            🔄
+        </button>
 
-    <button id="captureBtn">
-      📸 Ambil Foto
-    </button>
+    </div>
 
-    <button id="switchBtn">
-      🔄 Ganti Kamera
-    </button>
 
-    <a
-      id="downloadBtn"
-      class="download"
-      download="foto-twibbon-tamuri.png"
-    >
-      ⬇ Simpan Foto
-    </a>
+    <div class="camera-wrapper">
 
-  </div>
+        <video
+            id="video"
+            autoplay
+            playsinline
+            muted>
+        </video>
 
-  <img id="result" alt="Hasil Foto">
+        <img
+            src="tamuri.png"
+            class="twibbon"
+            id="twibbon"
+        >
 
-  <canvas id="canvas"></canvas>
+        <div class="status">
+            <span class="status-dot"></span>
+            Kamera aktif
+        </div>
 
-  <div class="info">
-    Izinkan akses kamera ketika browser meminta izin.
-  </div>
+        <div class="countdown" id="countdown">
+            <span id="countdownText">3</span>
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <button
+            class="small-control"
+            id="switchBottom">
+            🔄
+        </button>
+
+        <button
+            class="shutter"
+            id="captureBtn">
+
+            <div class="shutter-inner"></div>
+
+        </button>
+
+        <button
+            class="small-control"
+            id="shareInfo">
+            ↗
+        </button>
+
+    </div>
+
+    <div class="hint">
+        Tekan tombol kamera untuk mengambil foto
+    </div>
 
 </div>
 
 
+
+<!-- RESULT -->
+
+<div
+    class="result-page"
+    id="resultPage">
+
+    <div class="result-header">
+        Foto Kamu ✨
+    </div>
+
+    <div class="result-image-wrap">
+        <img
+            id="result"
+            alt="Hasil foto">
+    </div>
+
+    <div class="action-panel">
+
+        <button
+            class="main-share"
+            id="shareBtn">
+
+            📤 Bagikan Foto
+
+        </button>
+
+        <div class="secondary-actions">
+
+            <button id="retakeBtn">
+                📷 Foto Ulang
+            </button>
+
+            <a
+                id="downloadBtn"
+                download="tamuri-photo.png">
+
+                ⬇ Simpan
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- LOADING -->
+
+<div
+    class="loading"
+    id="loading">
+
+    <div class="loader-box">
+
+        <div class="spinner"></div>
+
+        <p>
+            Menyiapkan foto...
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<canvas id="canvas"></canvas>
+
+
 <script>
 
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const result = document.getElementById("result");
-const twibbon = document.getElementById("twibbon");
+const video =
+document.getElementById("video");
 
-const captureBtn = document.getElementById("captureBtn");
-const switchBtn = document.getElementById("switchBtn");
-const downloadBtn = document.getElementById("downloadBtn");
+const canvas =
+document.getElementById("canvas");
 
-let currentFacingMode = "user";
-let currentStream = null;
+const twibbon =
+document.getElementById("twibbon");
+
+const captureBtn =
+document.getElementById("captureBtn");
+
+const switchBtn =
+document.getElementById("switchBtn");
+
+const switchBottom =
+document.getElementById("switchBottom");
+
+const countdown =
+document.getElementById("countdown");
+
+const countdownText =
+document.getElementById("countdownText");
+
+const result =
+document.getElementById("result");
+
+const resultPage =
+document.getElementById("resultPage");
+
+const retakeBtn =
+document.getElementById("retakeBtn");
+
+const shareBtn =
+document.getElementById("shareBtn");
+
+const downloadBtn =
+document.getElementById("downloadBtn");
+
+const loading =
+document.getElementById("loading");
 
 
-// ===============================
-// BUKA KAMERA
-// ===============================
+let stream = null;
 
-async function startCamera() {
+let facingMode = "user";
 
-  if (currentStream) {
-    currentStream
-      .getTracks()
-      .forEach(track => track.stop());
-  }
+let resultBlob = null;
 
-  try {
+let photoFile = null;
 
-    const constraints = {
 
-      video: {
-        facingMode: currentFacingMode,
-        width: {
-          ideal: 1080
-        },
-        height: {
-          ideal: 1920
-        }
-      },
 
-      audio: false
+// =================================
+// KAMERA
+// =================================
 
-    };
+async function startCamera(){
 
-    currentStream =
-      await navigator.mediaDevices.getUserMedia(
-        constraints
-      );
+    if(stream){
 
-    video.srcObject = currentStream;
+        stream
+        .getTracks()
+        .forEach(track => track.stop());
 
-  }
+    }
 
-  catch (error) {
 
-    console.error(error);
+    try{
 
-    alert(
-      "Kamera tidak dapat dibuka. Pastikan izin kamera sudah diberikan."
-    );
+        stream =
+        await navigator.mediaDevices.getUserMedia({
 
-  }
+            video:{
+
+                facingMode:{
+                    ideal:facingMode
+                },
+
+                width:{
+                    ideal:1920
+                },
+
+                height:{
+                    ideal:1080
+                }
+
+            },
+
+            audio:false
+
+        });
+
+
+        video.srcObject = stream;
+
+        await video.play();
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Kamera tidak dapat dibuka. Pastikan izin kamera sudah diberikan."
+        );
+
+    }
 
 }
 
 
-// ===============================
+
+// =================================
 // GANTI KAMERA
-// ===============================
+// =================================
 
-switchBtn.addEventListener(
-  "click",
-  async () => {
+async function switchCamera(){
 
-    currentFacingMode =
-      currentFacingMode === "user"
-        ? "environment"
-        : "user";
+    facingMode =
+    facingMode === "user"
+    ? "environment"
+    : "user";
 
     await startCamera();
 
-  }
-);
+}
 
 
-// ===============================
-// AMBIL FOTO
-// ===============================
+switchBtn.onclick =
+switchCamera;
+
+switchBottom.onclick =
+switchCamera;
+
+
+
+// =================================
+// COUNTDOWN
+// =================================
 
 captureBtn.addEventListener(
-  "click",
-  () => {
+"click",
+async()=>{
 
-    const width = 1080;
-    const height = 1920;
+    captureBtn.disabled = true;
 
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx =
-      canvas.getContext("2d");
+    countdown.style.display =
+    "flex";
 
 
-    // ===============================
-    // GAMBAR KAMERA
-    // ===============================
+    for(let i=3;i>=1;i--){
 
-    if (currentFacingMode === "user") {
+        countdownText.textContent =
+        i;
 
-      ctx.save();
-
-      ctx.translate(
-        width,
-        0
-      );
-
-      ctx.scale(
-        -1,
-        1
-      );
-
-      drawCover(
-        ctx,
-        video,
-        0,
-        0,
-        width,
-        height
-      );
-
-      ctx.restore();
-
-    }
-
-    else {
-
-      drawCover(
-        ctx,
-        video,
-        0,
-        0,
-        width,
-        height
-      );
+        await wait(650);
 
     }
 
 
-    // ===============================
-    // GAMBAR TWIBBON
-    // ===============================
+    countdownText.textContent =
+    "📸";
 
-    ctx.drawImage(
-      twibbon,
-      0,
-      0,
-      width,
-      height
+    await wait(250);
+
+
+    countdown.style.display =
+    "none";
+
+
+    takePhoto();
+
+
+    captureBtn.disabled =
+    false;
+
+});
+
+
+
+function wait(ms){
+
+    return new Promise(
+        resolve =>
+        setTimeout(resolve,ms)
     );
-
-
-    // ===============================
-    // HASIL
-    // ===============================
-
-    const image =
-      canvas.toDataURL(
-        "image/png",
-        1
-      );
-
-    result.src = image;
-
-    result.style.display =
-      "block";
-
-    downloadBtn.href =
-      image;
-
-    downloadBtn.style.display =
-      "inline-block";
-
-    result.scrollIntoView({
-      behavior: "smooth"
-    });
-
-  }
-);
-
-
-// ===============================
-// OBJECT FIT COVER UNTUK CANVAS
-// ===============================
-
-function drawCover(
-  ctx,
-  source,
-  x,
-  y,
-  width,
-  height
-) {
-
-  const sourceWidth =
-    source.videoWidth;
-
-  const sourceHeight =
-    source.videoHeight;
-
-  if (
-    !sourceWidth ||
-    !sourceHeight
-  ) return;
-
-
-  const sourceRatio =
-    sourceWidth /
-    sourceHeight;
-
-  const targetRatio =
-    width /
-    height;
-
-
-  let sx = 0;
-  let sy = 0;
-
-  let sw =
-    sourceWidth;
-
-  let sh =
-    sourceHeight;
-
-
-  if (
-    sourceRatio >
-    targetRatio
-  ) {
-
-    sw =
-      sourceHeight *
-      targetRatio;
-
-    sx =
-      (sourceWidth - sw) /
-      2;
-
-  }
-
-  else {
-
-    sh =
-      sourceWidth /
-      targetRatio;
-
-    sy =
-      (sourceHeight - sh) /
-      2;
-
-  }
-
-
-  ctx.drawImage(
-    source,
-
-    sx,
-    sy,
-    sw,
-    sh,
-
-    x,
-    y,
-    width,
-    height
-  );
 
 }
 
 
-// ===============================
-// MULAI
-// ===============================
+
+// =================================
+// AMBIL FOTO
+// =================================
+
+function takePhoto(){
+
+    loading.style.display =
+    "flex";
+
+
+    const width =
+    1080;
+
+    const height =
+    1920;
+
+
+    canvas.width =
+    width;
+
+    canvas.height =
+    height;
+
+
+    const ctx =
+    canvas.getContext("2d");
+
+
+    // FOTO KAMERA TANPA MIRROR
+
+    drawCover(
+        ctx,
+        video,
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    // TWIBBON
+
+    ctx.drawImage(
+        twibbon,
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    canvas.toBlob(
+
+        blob=>{
+
+            resultBlob =
+            blob;
+
+
+            photoFile =
+            new File(
+
+                [blob],
+
+                "tamuri-photo.png",
+
+                {
+                    type:"image/png"
+                }
+
+            );
+
+
+            const url =
+            URL.createObjectURL(blob);
+
+
+            result.src =
+            url;
+
+
+            downloadBtn.href =
+            url;
+
+
+            loading.style.display =
+            "none";
+
+
+            resultPage.style.display =
+            "flex";
+
+        },
+
+        "image/png",
+
+        1
+
+    );
+
+}
+
+
+
+// =================================
+// COVER
+// =================================
+
+function drawCover(
+ctx,
+source,
+x,
+y,
+width,
+height
+){
+
+    const sw =
+    source.videoWidth;
+
+    const sh =
+    source.videoHeight;
+
+
+    if(!sw || !sh)
+        return;
+
+
+    const sourceRatio =
+    sw / sh;
+
+    const targetRatio =
+    width / height;
+
+
+    let sx = 0;
+    let sy = 0;
+
+    let cropWidth =
+    sw;
+
+    let cropHeight =
+    sh;
+
+
+    if(sourceRatio > targetRatio){
+
+        cropWidth =
+        sh * targetRatio;
+
+        sx =
+        (sw - cropWidth) / 2;
+
+    }else{
+
+        cropHeight =
+        sw / targetRatio;
+
+        sy =
+        (sh - cropHeight) / 2;
+
+    }
+
+
+    ctx.drawImage(
+
+        source,
+
+        sx,
+        sy,
+        cropWidth,
+        cropHeight,
+
+        x,
+        y,
+        width,
+        height
+
+    );
+
+}
+
+
+
+// =================================
+// FOTO ULANG
+// =================================
+
+retakeBtn.onclick =
+()=>{
+
+    resultPage.style.display =
+    "none";
+
+};
+
+
+
+// =================================
+// SHARE
+// =================================
+
+shareBtn.onclick =
+async()=>{
+
+    if(!photoFile){
+
+        alert(
+            "Foto belum tersedia."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+
+        if(
+
+            navigator.canShare &&
+
+            navigator.canShare({
+                files:[photoFile]
+            })
+
+        ){
+
+
+            await navigator.share({
+
+                files:[
+                    photoFile
+                ],
+
+                title:
+                "Tamuri Catering",
+
+                text:
+                "Momen bersama Tamuri Catering ✨"
+
+            });
+
+
+        }else if(navigator.share){
+
+
+            await navigator.share({
+
+                title:
+                "Tamuri Catering",
+
+                text:
+                "Momen bersama Tamuri Catering"
+
+            });
+
+
+        }else{
+
+
+            alert(
+                "Fitur berbagi langsung tidak tersedia di browser ini. Silakan simpan foto terlebih dahulu."
+            );
+
+
+        }
+
+
+    }catch(error){
+
+
+        if(
+            error.name !==
+            "AbortError"
+        ){
+
+            console.error(error);
+
+        }
+
+    }
+
+};
+
+
+
+// =================================
+// SHARE INFO
+// =================================
+
+document
+.getElementById("shareInfo")
+.onclick =
+()=>{
+
+    alert(
+        "Setelah foto diambil, kamu bisa membagikannya ke WhatsApp, Instagram, TikTok, Telegram, dan aplikasi lain melalui menu Share HP."
+    );
+
+};
+
+
+
+// =================================
+// START
+// =================================
 
 startCamera();
 
